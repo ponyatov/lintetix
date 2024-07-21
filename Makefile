@@ -66,15 +66,13 @@ gz:
 
 MM_SUITE  = bookworm
 MM_MIRROR = etc/apt/sources.list
-MM_OPTS  += --aptopt=etc/apt/apt.conf.d/99proxy
+MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
 MM_OPTS  += --architectures=$(ARCH)
 MM_OPTS  += --variant=custom
 MM_OPTS  += --setup-hook='mkdir -p "$$1"'
 MM_OPTS  += --customize-hook='git checkout "$$1"'
 MM_OPTS  += --customize-hook='sync-in etc /etc'
-# MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
-# MM_OPTS  += --customize-hook='copy-in etc/wpa_supplicant /etc/wpa_supplicant'
-MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
+MM_OPTS  += --customize-hook='chown -R root:root "$$1/etc"'
 
 .PHONY: deb
 deb:
