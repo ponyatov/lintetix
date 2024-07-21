@@ -1,0 +1,4 @@
+#auto  wlp3s0
+#allow-hotplug wlp3s0
+iface wlp3s0 inet dhcp
+	wpa-conf /etc/wpa_supplicant/wpa_supplicant.conf

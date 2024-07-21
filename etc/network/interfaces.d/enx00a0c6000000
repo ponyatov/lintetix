@@ -1,0 +1,2 @@
+allow-hotplug enx00a0c6000000
+iface enx00a0c6000000 inet dhcp
