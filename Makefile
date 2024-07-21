@@ -64,11 +64,22 @@ gz:
 
 # debstrap
 
+MM_SUITE  = bookworm
+MM_MIRROR = etc/apt/sources.list
 MM_OPTS  += --aptopt=etc/apt/apt.conf.d/99proxy
+MM_OPTS  += --architectures=$(ARCH)
+MM_OPTS  += --variant=custom
+MM_OPTS  += --setup-hook='mkdir -p "$$1"'
+MM_OPTS  += --customize-hook='git checkout "$$1"'
+MM_OPTS  += --customize-hook='sync-in $(CWD)/etc/network /etc/network'
+MM_OPTS  += --customize-hook='sync-in $(CWD)/etc/wpa_supplicant /etc/wpa_supplicant'
+MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
 
 .PHONY: deb
 deb:
-	rm -rf $(ROOT) ; git checkout $(ROOT)
+	sudo rm -rf $(ROOT)
+#  ; git checkout $(ROOT)
+	sudo mmdebstrap $(MM_OPTS) $(MM_SUITE) $(ROOT) $(MM_MIRROR)
 
 .PHONY: squid
 squid: etc/squid/squid.conf $(SQUIDIR)/00/00
