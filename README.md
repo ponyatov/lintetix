@@ -8,3 +8,4 @@ github: https://github.com/ponyatov/lintetix
 ## also
 
 - https://github.com/ponyatov/deb/tree/shadow
+- https://youtu.be/q_fcW5wQ8MQ?si=nSIDxrwDckD6ttGE
