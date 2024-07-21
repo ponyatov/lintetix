@@ -1,10 +1,6 @@
 # var
 MODULE = $(notdir $(CURDIR))
 
-# dir
-CWD  = $(CURDIR)
-ROOT = $(CWD)/root
-
 # cross
 APP ?= $(MODULE)
 HW  ?= qemu386
@@ -14,9 +10,15 @@ include  cpu/$(CPU).mk
 include arch/$(ARCH).mk
 include  app/$(APP).mk
 
+# dir
+CWD     = $(CURDIR)
+ROOT    = $(CWD)/root
+SQUIDIR = /mnt/hdd/squid
+
 # tool
-CURL = curl -L -o
-CF   = clang-format -style=file -i
+CURL  = curl -L -o
+CF    = clang-format -style=file -i
+SQUID = /usr/sbin/squid
 
 # src
 C += $(wildcard src/*.c*)
@@ -67,3 +69,9 @@ MM_OPTS  += --aptopt=etc/apt/apt.conf.d/99proxy
 .PHONY: deb
 deb:
 	rm -rf $(ROOT) ; git checkout $(ROOT)
+
+.PHONY: squid
+squid: etc/squid/squid.conf $(SQUIDIR)/00/00
+	$(SQUID) -N -f $<
+$(SQUIDIR)/00/00: etc/squid/squid.conf
+	$(SQUID) -N -f $< -z
