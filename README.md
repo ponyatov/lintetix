@@ -1,0 +1,2 @@
+# lintetix
+Intetix Linux bootstrap
