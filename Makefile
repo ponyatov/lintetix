@@ -1,6 +1,10 @@
 # var
 MODULE = $(notdir $(CURDIR))
 
+# dir
+CWD  = $(CURDIR)
+ROOT = $(CWD)/root
+
 # cross
 APP ?= $(MODULE)
 HW  ?= qemu386
@@ -53,3 +57,11 @@ update:
 	sudo apt install -uy `cat apt.txt`
 ref:
 gz:
+
+# debstrap
+
+MM_OPTS  += --aptopt=etc/apt/apt.conf.d/99proxy
+
+.PHONY: deb
+deb:
+	rm -rf $(ROOT) ; git checkout $(ROOT)

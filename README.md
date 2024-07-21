@@ -8,4 +8,7 @@ github: https://github.com/ponyatov/lintetix
 ## also
 
 - https://github.com/ponyatov/deb/tree/shadow
-- https://youtu.be/q_fcW5wQ8MQ?si=nSIDxrwDckD6ttGE
+- debootstrap
+  - https://youtu.be/q_fcW5wQ8MQ?si=nSIDxrwDckD6ttGE
+  - mmdebstrap
+    - https://youtu.be/UrDlUWNNkDY?si=4lWm3fkwwkUj9NJN
