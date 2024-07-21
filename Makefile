@@ -1,6 +1,15 @@
 # var
 MODULE = $(notdir $(CURDIR))
 
+# cross
+APP ?= $(MODULE)
+HW  ?= qemu386
+include  any/any.mk
+include   hw/$(HW).mk
+include  cpu/$(CPU).mk
+include arch/$(ARCH).mk
+include  app/$(APP).mk
+
 # tool
 CURL = curl -L -o
 CF   = clang-format -style=file -i
