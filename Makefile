@@ -165,7 +165,9 @@ syslinux: \
 root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 	sudo cp $< $@
 root/isolinux/isolinux.cfg: Makefile
-	echo "LINUX /boot/vmlinuz-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee $@
+	echo "DEFAULT boot" | sudo tee $@
+	echo "LABEL boot" | sudo tee -a $@
+	echo "LINUX /boot/vmlinuz-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee -a $@
 	
 root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 	sudo cp $< $@
