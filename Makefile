@@ -100,7 +100,7 @@ MM_OPTS  += --include=git,make,curl,mc,vim,less
 MM_OPTS  += --include=live-boot,init,openssh-server
 MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux,syslinux,syslinux-common
 MM_OPTS  += --include=firmware-linux-free,firmware-linux-nonfree,pciutils
-MM_OPTS  += --include=iproute2
+MM_OPTS  += --include=iproute2,ifupdown,wpasupplicant
 MM_OPTS  += --include=usbutils,alsa-utils
 # ,mplayer
 # nginx,squid,python3
