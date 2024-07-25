@@ -87,7 +87,7 @@ MM_OPTS  += --variant=minbase
 MM_OPTS  += --setup-hook='mkdir -p "$$1"'
 MM_OPTS  += --setup-hook='git checkout "$$1/.gitignore"'
 MM_OPTS  += --customize-hook='echo $(APP) > "$$1/etc/hostname"'
-# MM_OPTS  += --customize-hook='git checkout "$$1"'
+MM_OPTS  += --customize-hook='git checkout "$$1/isolinux"'
 # MM_OPTS  += --customize-hook='sync-in etc /etc'
 # MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
 # MM_OPTS  += --customize-hook='copy-in etc/wpa_supplicant /etc/wpa_supplicant'
@@ -98,7 +98,7 @@ MM_OPTS  += --customize-hook='echo $(APP) > "$$1/etc/hostname"'
 # MM_OPTS  += --include=dpkg,apt,debconf,passwd,mount,libpam0g
 MM_OPTS  += --include=git,make,curl,mc,vim,less
 MM_OPTS  += --include=live-boot,init,openssh-server
-MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux
+MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux,syslinux
 MM_OPTS  += --include=firmware-linux-free,firmware-linux-nonfree
 # adduser,findutils,
 # grep,gzip,hostname,login,passwd
@@ -146,7 +146,7 @@ iso:
 	$(MAKE) unchroot
 	sudo xorriso -as mkisofs -r -R -J \
 		-joliet-long -l -V "$(APP)$(HW)" \
-		-b /usr/lib/ISOLINUX/isohdpfx.bin -c isolinux/boot.cat -iso-level 3 \
+		-b /usr/lib/ISOLINUX/isolinux.bin -c isolinux/boot.cat -iso-level 3 \
 		-no-emul-boot -partition_offset 16 -boot-load-size 4 \
 		-boot-info-table -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
 		-o $(ISO) $(ROOT)
@@ -154,4 +154,4 @@ iso:
 
 .PHONY: qemu
 qemu: $(ISO)
-	$(QEMU) -cdrom $<
+	$(QEMU) -m 1G -boot d -cdrom $<
