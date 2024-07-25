@@ -169,7 +169,7 @@ root/isolinux/isolinux.cfg: Makefile
 	echo "LABEL   boot" | sudo tee -a $@
 	echo "LINUX   /boot/vmlinuz-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee -a $@
 	echo "INITRD  /boot/initrd.img-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee -a $@
-	echo "APPEND  vga=ask" | sudo tee -a $@
+	echo "APPEND  root=/dev/sr0" | sudo tee -a $@
 	
 root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 	sudo cp $< $@
