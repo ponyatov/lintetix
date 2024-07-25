@@ -179,6 +179,10 @@ root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 
 # autologin into god mode on system
 .PHONY: sulogin
-sulogin: $(ROOT)/etc/shadow
-	sudo sed -i 's/^root:\*:/root::/g' $<
-	sudo sed -i 's/--noclear -/--noclear -a root -/g' $<
+sulogin: \
+	$(ROOT)/etc/shadow \
+	$(ROOT)/lib/systemd/system/getty@.service
+$(ROOT)/etc/shadow: Makefile
+	sudo sed -i 's/^root:\*:/root::/g' $@
+$(ROOT)/lib/systemd/system/getty@.service: Makefile
+	sudo sed -i 's/--noclear -/--noclear -a root -/g' $@
