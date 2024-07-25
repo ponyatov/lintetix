@@ -101,20 +101,19 @@ MM_OPTS  += --include=live-boot,init,openssh-server
 MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux,syslinux,syslinux-common
 MM_OPTS  += --include=firmware-linux-free,firmware-linux-nonfree,pciutils
 MM_OPTS  += --include=iproute2
-MM_OPTS  += --include=usbutils,alsa-utils,mplayer
-# adduser,findutils,
-# grep,gzip,hostname,login,passwd
+MM_OPTS  += --include=usbutils,alsa-utils
+# ,mplayer
 # nginx,squid,python3
 
 .PHONY: deb
 deb:
 	$(MAKE) unchroot ; sudo rm -rf $(ROOT)
 	sudo mmdebstrap $(MM_OPTS) $(MM_SUITE) $(ROOT) $(MM_MIRROR)
+	$(MAKE) sulogin
 	sudo rm -rf \
 		$(ROOT)/etc/apt/apt.conf.d/99* \
 		$(ROOT)/etc/dpkg/dpkg.conf.d/99*
 # $(ROOT)/etc/apt/sources.list.d/0000*
-	$(MAKE) sulogin
 
 # proxy server for apt
 .PHONY: squid
