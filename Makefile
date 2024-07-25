@@ -70,24 +70,30 @@ gz:
 MM_SUITE  = bookworm
 MM_MIRROR = etc/apt/sources.list
 MM_OPTS  += --aptopt=etc/apt/apt.conf.d/99proxy
+MM_OPTS  += --dpkgopt='path-exclude=/usr/share/doc/*'
+MM_OPTS  += --dpkgopt='path-exclude=/usr/share/info/*'
 MM_OPTS  += --architectures=$(ARCH)
-MM_OPTS  += --variant=minbase
+MM_OPTS  += --variant=required
+# minbase
 # custom
 MM_OPTS  += --setup-hook='mkdir -p "$$1"'
 MM_OPTS  += --setup-hook='git checkout "$$1/.gitignore"'
 MM_OPTS  += --customize-hook='git checkout "$$1"'
 MM_OPTS  += --customize-hook='sync-in etc /etc'
-MM_OPTS  += --customize-hook='rm $$1/etc/apt/sources.list.d/*'
+MM_OPTS  += --customize-hook='rm $$1/etc/apt/sources.list.d/0000*'
 # MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
 # MM_OPTS  += --customize-hook='copy-in etc/wpa_supplicant /etc/wpa_supplicant'
 MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
-MM_OPTS  += --include=linux-image-i386,isolinux
+MM_OPTS  += --include=isolinux
 
 .PHONY: deb
 deb:
 	sudo rm -rf $(ROOT)
 #  ; git checkout $(ROOT)
 	sudo mmdebstrap $(MM_OPTS) $(MM_SUITE) $(ROOT) $(MM_MIRROR)
+	sudo rm \
+		$(ROOT)/etc/apt/apt.conf.d/99* \
+		$(ROOT)/etc/dpkg/dpkg.conf.d/99*
 
 .PHONY: squid
 squid: etc/squid/squid.conf $(SQUIDIR)/00/00
