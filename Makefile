@@ -77,10 +77,11 @@ MM_OPTS  += --setup-hook='mkdir -p "$$1"'
 MM_OPTS  += --setup-hook='git checkout "$$1/.gitignore"'
 MM_OPTS  += --customize-hook='git checkout "$$1"'
 MM_OPTS  += --customize-hook='sync-in etc /etc'
+MM_OPTS  += --customize-hook='rm $$1/etc/apt/sources.list.d/*'
 # MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
 # MM_OPTS  += --customize-hook='copy-in etc/wpa_supplicant /etc/wpa_supplicant'
 MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
-# MM_OPTS  += --include=linux-image-i386
+MM_OPTS  += --include=linux-image-i386,isolinux
 
 .PHONY: deb
 deb:
