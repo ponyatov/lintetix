@@ -98,7 +98,7 @@ MM_OPTS  += --customize-hook='echo $(APP) > "$$1/etc/hostname"'
 # MM_OPTS  += --include=dpkg,apt,debconf,passwd,mount,libpam0g
 MM_OPTS  += --include=git,make,curl,mc,vim,less
 MM_OPTS  += --include=live-boot,init,openssh-server
-MM_OPTS  += --include=linux-image-$(LINUX_VER)-686,isolinux
+MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux
 # adduser,findutils,
 # grep,gzip,hostname,login,passwd
 # nginx,squid,python3
