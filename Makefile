@@ -99,6 +99,7 @@ MM_OPTS  += --customize-hook='echo $(APP) > "$$1/etc/hostname"'
 MM_OPTS  += --include=git,make,curl,mc,vim,less
 MM_OPTS  += --include=live-boot,init,openssh-server
 MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux
+MM_OPTS  += --include=firmware-linux-free,firmware-linux-nonfree
 # adduser,findutils,
 # grep,gzip,hostname,login,passwd
 # nginx,squid,python3
@@ -109,8 +110,8 @@ deb:
 	sudo mmdebstrap $(MM_OPTS) $(MM_SUITE) $(ROOT) $(MM_MIRROR)
 	sudo rm -rf \
 		$(ROOT)/etc/apt/apt.conf.d/99* \
-		$(ROOT)/etc/dpkg/dpkg.conf.d/99* \
-		$(ROOT)/etc/apt/sources.list.d/0000*
+		$(ROOT)/etc/dpkg/dpkg.conf.d/99*
+# $(ROOT)/etc/apt/sources.list.d/0000*
 
 .PHONY: squid
 squid: etc/squid/squid.conf $(SQUIDIR)/00/00
@@ -135,6 +136,22 @@ chroot:
 	sudo chroot $(ROOT)
 	$(MAKE) unchroot
 unchroot:
-	sudo umount              $(ROOT)/proc
-	sudo umount              $(ROOT)/sys
-	sudo umount              $(ROOT)/dev
+	-sudo umount              $(ROOT)/proc
+	-sudo umount              $(ROOT)/sys
+	-sudo umount              $(ROOT)/dev
+
+ISO = fw/$(APP)$(HW).iso
+.PHONY: iso
+iso:
+	$(MAKE) unchroot
+	sudo xorriso -as mkisofs -r -R -J \
+		-joliet-long -l -V "$(APP)$(HW)" \
+		-b /usr/lib/ISOLINUX/isohdpfx.bin -c isolinux/boot.cat -iso-level 3 \
+		-no-emul-boot -partition_offset 16 -boot-load-size 4 \
+		-boot-info-table -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+		-o $(ISO) $(ROOT)
+	sudo chown `whoami` $(ISO)
+
+.PHONY: qemu
+qemu: $(ISO)
+	$(QEMU) -cdrom $<
