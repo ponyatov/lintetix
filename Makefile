@@ -89,6 +89,7 @@ MM_OPTS  += --setup-hook='git checkout "$$1/.gitignore"'
 MM_OPTS  += --customize-hook='echo $(APP) > "$$1/etc/hostname"'
 MM_OPTS  += --customize-hook='git checkout "$$1/isolinux"'
 # MM_OPTS  += --customize-hook='sync-in etc /etc'
+MM_OPTS  += --customize-hook='sync-in lib/systemd /lib/systemd'
 # MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
 # MM_OPTS  += --customize-hook='copy-in etc/wpa_supplicant /etc/wpa_supplicant'
 # MM_OPTS  += --include=libc6,libc-bin,dpkg,dash,busybox,base-files,base-passwd,debianutils
