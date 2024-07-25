@@ -166,8 +166,10 @@ root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 	sudo cp $< $@
 root/isolinux/isolinux.cfg: Makefile
 	echo "DEFAULT boot" | sudo tee $@
-	echo "LABEL boot" | sudo tee -a $@
-	echo "LINUX /boot/vmlinuz-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee -a $@
+	echo "LABEL   boot" | sudo tee -a $@
+	echo "LINUX   /boot/vmlinuz-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee -a $@
+	echo "INITRD  /boot/initrd.img-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee -a $@
+	echo "APPEND  vga=ask" | sudo tee -a $@
 	
 root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 	sudo cp $< $@
