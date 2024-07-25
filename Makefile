@@ -17,7 +17,7 @@ include  app/$(APP).mk
 # dir
 CWD     = $(CURDIR)
 ROOT    = $(CWD)/root
-SQUIDIR = $(HOME)/tmp/squid
+SQUIDIR = tmp/$(MODULE)
 
 # tool
 CURL  = curl -L -o
