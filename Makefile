@@ -157,7 +157,7 @@ qemu: $(ISO)
 	$(QEMU) -m 1G -boot d -cdrom $<
 
 .PHONY: syslinux
-syslinux:
+syslinux: \
 	root/isolinux/libcom32.c32 \
 	root/isolinux/reboot.c32 root/isolinux/poweroff.c32 \
 	root/isolinux/ldlinux.c32 root/isolinux/linux.c32
