@@ -99,7 +99,7 @@ MM_OPTS  += --customize-hook='git checkout "$$1/isolinux"'
 MM_OPTS  += --include=git,make,curl,mc,vim,less
 MM_OPTS  += --include=live-boot,init,openssh-server
 MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux,syslinux,syslinux-common
-MM_OPTS  += --include=firmware-linux-free,firmware-linux-nonfree
+MM_OPTS  += --include=firmware-linux-free,firmware-linux-nonfree,pciutils
 # adduser,findutils,
 # grep,gzip,hostname,login,passwd
 # nginx,squid,python3
@@ -145,7 +145,7 @@ ISO = fw/$(APP)$(HW).iso
 iso: syslinux
 	$(MAKE) unchroot
 	sudo xorriso -as mkisofs -r -R -J \
-		-joliet-long -l -V "$(APP)$(HW)" \
+		-joliet-long -l -V "$(APP)_$(HW)" \
 		-b /usr/lib/ISOLINUX/isolinux.bin -c isolinux/boot.cat -iso-level 3 \
 		-no-emul-boot -partition_offset 16 -boot-load-size 4 \
 		-boot-info-table -isohybrid-mbr root/usr/lib/ISOLINUX/isohdpfx.bin \
@@ -154,7 +154,7 @@ iso: syslinux
 
 .PHONY: qemu
 qemu: $(ISO)
-	$(QEMU) -m 1G -boot d -cdrom $<
+	$(QEMU) $(QEMU_CFG) -boot d -cdrom $<
 
 .PHONY: syslinux
 syslinux: \
@@ -169,7 +169,7 @@ root/isolinux/isolinux.cfg: Makefile
 	echo "LABEL   boot" | sudo tee -a $@
 	echo "LINUX   /boot/vmlinuz-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee -a $@
 	echo "INITRD  /boot/initrd.img-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee -a $@
-	echo "APPEND  root=/dev/sr0" | sudo tee -a $@
+	echo "APPEND  root=LABEL=$(APP)_$(HW)" | sudo tee -a $@
 	
 root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 	sudo cp $< $@
