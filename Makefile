@@ -157,6 +157,13 @@ qemu: $(ISO)
 	$(QEMU) -m 1G -boot d -cdrom $<
 
 .PHONY: syslinux
-syslinux: root/isolinux/ldlinux.c32
+syslinux:
+	root/isolinux/libcom32.c32 \
+	root/isolinux/reboot.c32 root/isolinux/poweroff.c32 \
+	root/isolinux/ldlinux.c32 root/isolinux/linux.c32
+	$(MAKE) root/isolinux/isolinux.cfg
+root/isolinux/isolinux.cfg: Makefile
+	echo "LINUX /boot/vmlinuz-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee $@
+	
 root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 	sudo cp $< $@
