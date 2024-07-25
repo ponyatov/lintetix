@@ -69,7 +69,8 @@ gz:
 
 MM_SUITE  = bookworm
 MM_MIRROR = etc/apt/sources.list
-MM_OPTS  += --aptopt=etc/apt/apt.conf.d/99proxy
+# MM_OPTS  += --aptopt=etc/apt/apt.conf.d/99proxy
+MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
 MM_OPTS  += --dpkgopt='path-exclude=/usr/share/man/*'
 MM_OPTS  += --dpkgopt='path-exclude=/usr/share/doc/*'
 MM_OPTS  += --dpkgopt='path-include=/usr/share/doc/*/copyright'
@@ -82,12 +83,10 @@ MM_OPTS  += --variant=minbase
 # custom
 MM_OPTS  += --setup-hook='mkdir -p "$$1"'
 MM_OPTS  += --setup-hook='git checkout "$$1/.gitignore"'
-MM_OPTS  += --customize-hook='git checkout "$$1"'
-MM_OPTS  += --customize-hook='sync-in etc /etc'
-MM_OPTS  += --customize-hook='rm $$1/etc/apt/sources.list.d/0000*'
+# MM_OPTS  += --customize-hook='git checkout "$$1"'
+# MM_OPTS  += --customize-hook='sync-in etc /etc'
 # MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
 # MM_OPTS  += --customize-hook='copy-in etc/wpa_supplicant /etc/wpa_supplicant'
-MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
 # MM_OPTS  += --include=libc6,libc-bin,dpkg,dash,busybox,base-files,base-passwd,debianutils
 # MM_OPTS  += --include=coreutils,diffutils,mawk
 # MM_OPTS  += --include=libacl1,libgcc-s1
@@ -104,7 +103,8 @@ deb:
 	sudo mmdebstrap $(MM_OPTS) $(MM_SUITE) $(ROOT) $(MM_MIRROR)
 	sudo rm -rf \
 		$(ROOT)/etc/apt/apt.conf.d/99* \
-		$(ROOT)/etc/dpkg/dpkg.conf.d/99*
+		$(ROOT)/etc/dpkg/dpkg.conf.d/99* \
+		$(ROOT)/etc/apt/sources.list.d/0000*
 
 .PHONY: squid
 squid: etc/squid/squid.conf $(SQUIDIR)/00/00
