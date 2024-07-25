@@ -89,7 +89,6 @@ MM_OPTS  += --setup-hook='git checkout "$$1/.gitignore"'
 MM_OPTS  += --customize-hook='echo $(APP) > "$$1/etc/hostname"'
 MM_OPTS  += --customize-hook='git checkout "$$1/isolinux"'
 # MM_OPTS  += --customize-hook='sync-in etc /etc'
-MM_OPTS  += --customize-hook='sync-in lib/systemd /lib/systemd'
 # MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
 # MM_OPTS  += --customize-hook='copy-in etc/wpa_supplicant /etc/wpa_supplicant'
 # MM_OPTS  += --include=libc6,libc-bin,dpkg,dash,busybox,base-files,base-passwd,debianutils
@@ -114,7 +113,9 @@ deb:
 		$(ROOT)/etc/apt/apt.conf.d/99* \
 		$(ROOT)/etc/dpkg/dpkg.conf.d/99*
 # $(ROOT)/etc/apt/sources.list.d/0000*
+	$(MAKE) sulogin
 
+# proxy server for apt
 .PHONY: squid
 squid: etc/squid/squid.conf $(SQUIDIR)/00/00
 	$(SQUID) -N -f $<
@@ -175,3 +176,9 @@ root/isolinux/isolinux.cfg: Makefile
 	
 root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
 	sudo cp $< $@
+
+# autologin into god mode on system
+.PHONY: sulogin
+sulogin: $(ROOT)/etc/shadow
+	sudo sed -i 's/^root:\*:/root::/g' $<
+	sudo sed -i 's/--noclear -/--noclear -a root -/g' $<
