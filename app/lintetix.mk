@@ -1,0 +1,1 @@
+QEMU_CFG = -m 256M

@@ -2,5 +2,5 @@ git make curl
 code meld doxygen clang-format
 g++ flex bison libreadline-dev
 libsdl2-dev
-qemu-system-i386 syslinux xorriso
+qemu-system-i386 xorriso
 mmdebstrap squid

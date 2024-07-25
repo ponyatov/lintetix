@@ -1,0 +1,6 @@
+# https://orcacore.com/install-squid-proxy-debian-11/
+
+http_access allow localhost
+
+maximum_object_size 128 MB
+
