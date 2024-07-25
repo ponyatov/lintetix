@@ -148,7 +148,7 @@ iso: syslinux
 		-joliet-long -l -V "$(APP)$(HW)" \
 		-b /usr/lib/ISOLINUX/isolinux.bin -c isolinux/boot.cat -iso-level 3 \
 		-no-emul-boot -partition_offset 16 -boot-load-size 4 \
-		-boot-info-table -isohybrid-mbr /usr/lib/ISOLINUX/isohdpfx.bin \
+		-boot-info-table -isohybrid-mbr root/usr/lib/ISOLINUX/isohdpfx.bin \
 		-o $(ISO) $(ROOT)
 	sudo chown `whoami` $(ISO)
 
