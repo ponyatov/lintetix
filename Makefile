@@ -98,7 +98,7 @@ MM_OPTS  += --customize-hook='git checkout "$$1/isolinux"'
 # MM_OPTS  += --include=dpkg,apt,debconf,passwd,mount,libpam0g
 MM_OPTS  += --include=git,make,curl,mc,vim,less
 MM_OPTS  += --include=live-boot,init,openssh-server
-MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux,syslinux
+MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux,syslinux,syslinux-common
 MM_OPTS  += --include=firmware-linux-free,firmware-linux-nonfree
 # adduser,findutils,
 # grep,gzip,hostname,login,passwd
@@ -142,7 +142,7 @@ unchroot:
 
 ISO = fw/$(APP)$(HW).iso
 .PHONY: iso
-iso:
+iso: syslinux
 	$(MAKE) unchroot
 	sudo xorriso -as mkisofs -r -R -J \
 		-joliet-long -l -V "$(APP)$(HW)" \
@@ -155,3 +155,8 @@ iso:
 .PHONY: qemu
 qemu: $(ISO)
 	$(QEMU) -m 1G -boot d -cdrom $<
+
+.PHONY: syslinux
+syslinux: root/isolinux/ldlinux.c32
+root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
+	sudo cp $< $@
