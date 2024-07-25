@@ -12,3 +12,5 @@ github: https://github.com/ponyatov/lintetix
   - https://youtu.be/q_fcW5wQ8MQ?si=nSIDxrwDckD6ttGE
   - mmdebstrap
     - [Building a busybox-based Debian rootfs with mmdebstrap](https://youtu.be/UrDlUWNNkDY?si=4lWm3fkwwkUj9NJN)
+
+- https://www.willhaley.com/blog/custom-debian-live-environment/

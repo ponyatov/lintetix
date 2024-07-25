@@ -65,15 +65,19 @@ gz:
 
 # debstrap
 
-# https://youtu.be/UrDlUWNNkDY?si=SPkYoEEdj3KJRhj1
+# https://youtu.be/UrDlUWNNkDY?si=twzZmIEYHUyUlUEa&t=560
 
 MM_SUITE  = bookworm
 MM_MIRROR = etc/apt/sources.list
 MM_OPTS  += --aptopt=etc/apt/apt.conf.d/99proxy
+MM_OPTS  += --dpkgopt='path-exclude=/usr/share/man/*'
 MM_OPTS  += --dpkgopt='path-exclude=/usr/share/doc/*'
+MM_OPTS  += --dpkgopt='path-include=/usr/share/doc/*/copyright'
 MM_OPTS  += --dpkgopt='path-exclude=/usr/share/info/*'
+MM_OPTS  += --dpkgopt='path-exclude=/usr/share/locale/*'
 MM_OPTS  += --architectures=$(ARCH)
-MM_OPTS  += --variant=required
+MM_OPTS  += --variant=minbase
+# required
 # minbase
 # custom
 MM_OPTS  += --setup-hook='mkdir -p "$$1"'
@@ -84,14 +88,21 @@ MM_OPTS  += --customize-hook='rm $$1/etc/apt/sources.list.d/0000*'
 # MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
 # MM_OPTS  += --customize-hook='copy-in etc/wpa_supplicant /etc/wpa_supplicant'
 MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
-MM_OPTS  += --include=isolinux
+# MM_OPTS  += --include=libc6,libc-bin,dpkg,dash,busybox,base-files,base-passwd,debianutils
+# MM_OPTS  += --include=coreutils,diffutils,mawk
+# MM_OPTS  += --include=libacl1,libgcc-s1
+# MM_OPTS  += --include=libc6,dash,bash
+# MM_OPTS  += --include=dpkg,apt,debconf,passwd,mount,libpam0g
+MM_OPTS  += --include=git,make,curl,mc,vim
+# adduser,findutils,
+# grep,gzip,hostname,login,passwd
+# nginx,squid,python3
 
 .PHONY: deb
 deb:
 	sudo rm -rf $(ROOT)
-#  ; git checkout $(ROOT)
 	sudo mmdebstrap $(MM_OPTS) $(MM_SUITE) $(ROOT) $(MM_MIRROR)
-	sudo rm \
+	sudo rm -rf \
 		$(ROOT)/etc/apt/apt.conf.d/99* \
 		$(ROOT)/etc/dpkg/dpkg.conf.d/99*
 
@@ -109,3 +120,13 @@ etc/squid/squid.conf: etc/squid/squid.in Makefile
 	echo "cache_dir aufs $(SQUIDIR) 40960 16 256" >> $@
 	echo >> $@
 	echo "http_port $(SQUIPORT)" >> $@
+
+.PHONY: chroot
+chroot:
+	sudo mount -t proc  none $(ROOT)/proc
+	sudo mount -t sysfs none $(ROOT)/sys
+	sudo mount -o bind  /dev $(ROOT)/dev
+	sudo chroot $(ROOT)
+	sudo umount              $(ROOT)/proc
+	sudo umount              $(ROOT)/sys
+	sudo umount              $(ROOT)/dev
