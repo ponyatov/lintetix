@@ -1,5 +1,6 @@
 # var
-MODULE = $(notdir $(CURDIR))
+MODULE   = $(notdir $(CURDIR))
+SQUIPORT = 13128
 
 # cross
 APP ?= $(MODULE)
@@ -13,7 +14,7 @@ include  app/$(APP).mk
 # dir
 CWD     = $(CURDIR)
 ROOT    = $(CWD)/root
-SQUIDIR = /mnt/hdd/squid
+SQUIDIR = $(HOME)/tmp/squid
 
 # tool
 CURL  = curl -L -o
@@ -86,4 +87,13 @@ deb:
 squid: etc/squid/squid.conf $(SQUIDIR)/00/00
 	$(SQUID) -N -f $<
 $(SQUIDIR)/00/00: etc/squid/squid.conf
-	$(SQUID) -N -f $< -z
+	mkdir -p $(SQUIDIR) && $(SQUID) -N -f $< -z
+etc/squid/squid.conf: etc/squid/squid.in Makefile
+	cat $< > $@
+	echo "pid_filename $(SQUIDIR)/pid" >> $@
+	echo "cache_log    $(SQUIDIR)/cache.log" >> $@
+	echo "access_log   $(SQUIDIR)/access.log" >> $@
+	echo >> $@
+	echo "cache_dir aufs $(SQUIDIR) 40960 16 256" >> $@
+	echo >> $@
+	echo "http_port $(SQUIPORT)" >> $@
