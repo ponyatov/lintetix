@@ -105,7 +105,7 @@ MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux
 
 .PHONY: deb
 deb:
-	sudo rm -rf $(ROOT)
+	$(MAKE) unchroot ; sudo rm -rf $(ROOT)
 	sudo mmdebstrap $(MM_OPTS) $(MM_SUITE) $(ROOT) $(MM_MIRROR)
 	sudo rm -rf \
 		$(ROOT)/etc/apt/apt.conf.d/99* \
