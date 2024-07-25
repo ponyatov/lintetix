@@ -100,6 +100,7 @@ MM_OPTS  += --include=git,make,curl,mc,vim,less
 MM_OPTS  += --include=live-boot,init,openssh-server
 MM_OPTS  += --include=linux-image-$(DEB_ARCH),isolinux,syslinux,syslinux-common
 MM_OPTS  += --include=firmware-linux-free,firmware-linux-nonfree,pciutils
+MM_OPTS  += --include=usbutils
 # adduser,findutils,
 # grep,gzip,hostname,login,passwd
 # nginx,squid,python3
@@ -140,7 +141,7 @@ unchroot:
 	-sudo umount              $(ROOT)/sys
 	-sudo umount              $(ROOT)/dev
 
-ISO = fw/$(APP)$(HW).iso
+ISO = fw/$(APP)_$(HW).iso
 .PHONY: iso
 iso: syslinux
 	$(MAKE) unchroot
