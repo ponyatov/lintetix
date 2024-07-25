@@ -162,6 +162,8 @@ syslinux:
 	root/isolinux/reboot.c32 root/isolinux/poweroff.c32 \
 	root/isolinux/ldlinux.c32 root/isolinux/linux.c32
 	$(MAKE) root/isolinux/isolinux.cfg
+root/isolinux/%: root/usr/lib/syslinux/modules/bios/%
+	sudo cp $< $@
 root/isolinux/isolinux.cfg: Makefile
 	echo "LINUX /boot/vmlinuz-$(LINUX_VER)-$(DEB_ARCH)" | sudo tee $@
 	
