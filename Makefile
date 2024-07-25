@@ -73,7 +73,7 @@ MM_MIRROR = etc/apt/sources.list
 MM_OPTS  += --aptopt='Acquire::http { Proxy "http://localhost:13128"; }'
 MM_OPTS  += --dpkgopt='path-exclude=/usr/share/man/*'
 MM_OPTS  += --dpkgopt='path-exclude=/usr/share/doc/*'
-MM_OPTS  += --dpkgopt='path-include=/usr/share/doc/*/copyright'
+# MM_OPTS  += --dpkgopt='path-include=/usr/share/doc/*/copyright'
 MM_OPTS  += --dpkgopt='path-exclude=/usr/share/info/*'
 MM_OPTS  += --dpkgopt='path-exclude=/usr/share/locale/*'
 MM_OPTS  += --architectures=$(ARCH)
@@ -83,6 +83,7 @@ MM_OPTS  += --variant=minbase
 # custom
 MM_OPTS  += --setup-hook='mkdir -p "$$1"'
 MM_OPTS  += --setup-hook='git checkout "$$1/.gitignore"'
+MM_OPTS  += --customize-hook='echo $(APP) > "$$1/etc/hostname"'
 # MM_OPTS  += --customize-hook='git checkout "$$1"'
 # MM_OPTS  += --customize-hook='sync-in etc /etc'
 # MM_OPTS  += --customize-hook='copy-in etc/network  /etc/network'
@@ -92,7 +93,9 @@ MM_OPTS  += --setup-hook='git checkout "$$1/.gitignore"'
 # MM_OPTS  += --include=libacl1,libgcc-s1
 # MM_OPTS  += --include=libc6,dash,bash
 # MM_OPTS  += --include=dpkg,apt,debconf,passwd,mount,libpam0g
-MM_OPTS  += --include=git,make,curl,mc,vim
+MM_OPTS  += --include=git,make,curl,mc,vim,less
+MM_OPTS  += --include=live-boot,init,openssh-server
+MM_OPTS  += --include=linux-image-6.1.0-23-686,isolinux
 # adduser,findutils,
 # grep,gzip,hostname,login,passwd
 # nginx,squid,python3
@@ -121,12 +124,14 @@ etc/squid/squid.conf: etc/squid/squid.in Makefile
 	echo >> $@
 	echo "http_port $(SQUIPORT)" >> $@
 
-.PHONY: chroot
+.PHONY: chroot unchroot
 chroot:
 	sudo mount -t proc  none $(ROOT)/proc
 	sudo mount -t sysfs none $(ROOT)/sys
 	sudo mount -o bind  /dev $(ROOT)/dev
 	sudo chroot $(ROOT)
+	$(MAKE) unchroot
+unchroot:
 	sudo umount              $(ROOT)/proc
 	sudo umount              $(ROOT)/sys
 	sudo umount              $(ROOT)/dev
